@@ -20,14 +20,14 @@ public class AdminService {
 	private AdminRepository adminRepository;
 	
 	@PostMapping(path = "/add")
-	public Admin addAdmin(@RequestBody Admin newAdmin) {
+	public String addAdmin(@RequestBody Admin newAdmin) {
 		for(Admin admin: adminRepository.findAll()) {
 			if(admin.getEmail().equals(newAdmin.getEmail())) {
-				return null;
+				return "User already exists !";
 			} 
 		}
 		adminRepository.save(newAdmin);
-		return newAdmin;
+		return "Registered successfully !";
 	}
 	
 	@PutMapping(path = "/update")
@@ -54,6 +54,17 @@ public class AdminService {
 	@GetMapping(path = "/msg")
 	public String hello() {
 		return "hello from admin !!";
+	}
+	
+	@PostMapping(path = "/login")
+	public Admin login(@RequestBody Admin user) {
+		for(Admin admin: adminRepository.findAll()) {
+			if(admin.getEmail().equals(user.getEmail()) &&
+			   admin.getPassword().equals(user.getPassword())) {
+				return admin;
+			}
+		}
+		return null;
 	}
 	
 }
