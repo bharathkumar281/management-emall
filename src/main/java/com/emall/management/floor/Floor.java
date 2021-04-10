@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import com.emall.management.mall.Mall;
 import com.emall.management.space.Space;
 

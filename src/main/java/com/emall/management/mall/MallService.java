@@ -2,6 +2,7 @@ package com.emall.management.mall;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +34,11 @@ public class MallService {
 		}).get();
 	}
 	
+	@GetMapping(path = "/get")
+	public Mall getMall(@RequestParam Integer id) {
+		return mallRepository.findById(id).get();
+	}
+	
 	@GetMapping(path = "/all")
 	public Iterable<Mall> getMalls() {
 		return mallRepository.findAll();
@@ -41,5 +47,11 @@ public class MallService {
 	@GetMapping(path = "/space-cost")
 	public String getSpaceCost(@RequestParam Integer id) {
 		return mallRepository.findById(id).get().getSpaceCost();
+	}
+	
+	@DeleteMapping(path = "/delete")
+	public String deleteMall(@RequestParam Integer id) {
+		mallRepository.deleteById(id);
+		return "deleted successfully !";
 	}
 }
