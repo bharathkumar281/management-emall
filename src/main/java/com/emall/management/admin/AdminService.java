@@ -1,5 +1,10 @@
 package com.emall.management.admin;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse.BodyHandlers;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,10 +25,18 @@ public class AdminService {
 	private AdminRepository adminRepository;
 	
 	@PostMapping(path = "/add")
-	public String addAdmin(@RequestBody Admin newAdmin) {
+	public String addAdmin(@RequestBody Admin newAdmin) throws Exception {
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest
+				.newBuilder()
+				.uri(URI.create("http://localhost:8082/staff/is-staff?email=" + newAdmin.getEmail()))
+				.GET()
+				.build();
+		
+		if(client.send(request, BodyHandlers.ofString()).body().equals("true")) return null;
 		for(Admin admin: adminRepository.findAll()) {
 			if(admin.getEmail().equals(newAdmin.getEmail())) {
-				return "User already exists !";
+				return null;
 			} 
 		}
 		adminRepository.save(newAdmin);
@@ -65,6 +78,11 @@ public class AdminService {
 			}
 		}
 		return null;
+	}
+	
+	@GetMapping(path = "/is-admin")
+	public String isAdmin(@RequestBody String email) {
+		return adminRepository.existsByEmail(email) ? "true": "false";
 	}
 	
 }

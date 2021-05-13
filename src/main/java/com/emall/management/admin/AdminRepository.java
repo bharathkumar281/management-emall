@@ -7,5 +7,5 @@ import com.emall.management.admin.Admin;
 
 @Repository
 public interface AdminRepository extends CrudRepository<Admin, Integer> {
-
+	public boolean existsByEmail(String email);
 }

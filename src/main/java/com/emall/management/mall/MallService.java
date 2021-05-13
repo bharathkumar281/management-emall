@@ -1,5 +1,12 @@
 package com.emall.management.mall;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse.BodyHandler;
+import java.net.http.HttpResponse.BodyHandlers;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,8 +57,16 @@ public class MallService {
 	}
 	
 	@DeleteMapping(path = "/delete")
-	public String deleteMall(@RequestParam Integer id) {
+	public String deleteMall(@RequestParam Integer id) throws Exception {
 		mallRepository.deleteById(id);
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest
+				.newBuilder()
+				.DELETE()
+				.uri(URI.create("http://localhost:8082/staff/delete-by-mall?id="+id))
+				.build();
+		if(client.send(request, BodyHandlers.ofString()).body().equals("success"))
 		return "deleted successfully !";
+		else return null;
 	}
 }
